@@ -10,13 +10,16 @@
 
 struct text
 {
-	struct drawable **chars;
+	struct texture **chars;
 	int size;
 };
 
-struct drawable *glyphFromChar(unsigned char, FT_Face*, float, float);
+struct texture *glyphFromChar(unsigned char, FT_Face*, float, float);
 
-struct text *newText(const char *source, FT_Face *face, float x, float y)
+struct text *newText(const char		*source,
+					 FT_Face		*face,
+					 float			x,
+					 float			y)
 {
 	if(!strlen(source))
 	{
@@ -25,21 +28,21 @@ struct text *newText(const char *source, FT_Face *face, float x, float y)
 	}
 	struct text *obj = malloc(sizeof(struct text));
 	obj->size = strlen(source);
-	obj->chars = malloc(sizeof(struct drawable*) * obj->size);
+	obj->chars = malloc(sizeof(struct texture*) * obj->size);
 	for(int i = 0; i < obj->size; i++)
 		obj->chars[i] = glyphFromChar(source[i], face, x+i*32, y);
 	return obj;
 }
 
-void drawText(struct text *textToDraw, GLuint shader)
+struct texture *glyphFromChar(unsigned char	t,
+							   FT_Face			*face,
+							   float			x,
+							   float			y)
 {
-	for(int i = 0; i < textToDraw->size; i++)
-		draw(textToDraw->chars[i], shader);
-}
+	struct texture *obj = malloc(sizeof(struct texture));
 
-struct drawable *glyphFromChar(unsigned char t, FT_Face *face, float x, float y)
-{
-	struct drawable *obj = malloc(sizeof(struct drawable));
+	obj->x = x; obj->y = y;
+
 	glGenTextures(1, &obj->_texture);
 	glBindTexture(GL_TEXTURE_2D, obj->_texture);
 
@@ -62,21 +65,6 @@ struct drawable *glyphFromChar(unsigned char t, FT_Face *face, float x, float y)
 	// set texture filtering. texture won't render without these parameters
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, prevAlignment);		// set pixel packing back to normal
-
-	glGenVertexArrays(1, &obj->_vao);
-	glBindVertexArray(obj->_vao);
-
-	float pos[8] = {x, y,
-					x+(*face)->glyph->bitmap.width * 4, y,
-					x+(*face)->glyph->bitmap.width * 4, y-(*face)->glyph->bitmap.rows * 4,
-					x, y-(*face)->glyph->bitmap.rows * 4};
-
-	glGenBuffers(1, &obj->_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, obj->_vao);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pos), pos, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, 0);
 
 	return obj;
 }

@@ -18,4 +18,5 @@ HEADERS += \
     text.h \
     cvar.h \
     fps.h \
-    context_functions.h
+    context_functions.h \
+    batch.h

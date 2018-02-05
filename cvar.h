@@ -14,7 +14,7 @@ struct cvar
 	int value;
 };
 
-static struct cvar *cvars;
+static struct cvar cvars[32];
 
 #define CVAR_SCREEN_WIDTH cvars[0].value
 #define CVAR_SCREEN_HEIGHT cvars[1].value

@@ -8,15 +8,16 @@
 #include "shader.h"
 #include "renderer.h"
 #include "input.h"
-#include "cvar.h"
 #include "fps.h"
 #include "text.h"
 #include "context_functions.h"
+#include "batch.h"
 
 static unsigned int currentVidMode = 0;
 
 int main()
 {
+	srand(time(NULL));
 	GLFWwindow *window;
 	const GLFWvidmode *vidmodes; int count;
 	FT_Library fontLibrary; FT_Face fontFace;
@@ -31,12 +32,17 @@ int main()
 	} // to do: implement this function in a different file
 
 	defaultShader = getShader(defaultVertexSource, defaultFragmentSource);
-	watermelonShader = getShader(watermelonVertexSource, defaultFragmentSource);
 	// initialise shaders. to do: initialise shaders somewhere else and only if needed
 
-	struct drawable *texture2 = newTexture("potion.tga", -256, -64, 128, 128);
+	struct texture **tex = malloc(sizeof(struct texture*) * 16384);
+	struct GLbatch *batch = newBatch(defaultShader);
 
-	struct text *t = newText("Malarkey piness!!", &fontFace, -320, 32);
+	for(int i = 0; i < 128; i++)
+		for(int j = 0; j < 128; j++)
+	{
+		tex[i*4+j] = newTexture("staff.tga", i*8-683, j*8-384, 32, 32);
+		addToBatch(batch, tex[i*4+j]);
+	}
 
 	GLint resolution[2] = {0, 0}, oldResolution[2] = {0, 0};
 
@@ -58,17 +64,14 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(watermelonShader);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2iv(glGetUniformLocation(watermelonShader, "resolution"), 1, resolution);
-		glUniform1f(glGetUniformLocation(watermelonShader, "time"), time);
-		draw(texture2, watermelonShader);
-
 		glUseProgram(defaultShader);
 		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, tex[0]->_texture);
 		glUniform2iv(glGetUniformLocation(defaultShader, "resolution"), 1, resolution);
+		glUniform1i(glGetUniformLocation(defaultShader, "tex"), 0);
 		glUniform1f(glGetUniformLocation(defaultShader, "time"), time);
-		drawText(t, defaultShader);
+
+		drawBatch(batch);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -92,6 +95,14 @@ int main()
 
 	} while(!glfwWindowShouldClose(window));
 
+	glDeleteShader(defaultShader);
+	glDeleteShader(watermelonShader);
+	glDeleteShader(testShader);
+	glDeleteShader(fontShader);
+	deleteBatch(batch);
+	free((GLFWvidmode*)vidmodes);
+
 	glfwDestroyWindow(window);
+
     return 0;
 }

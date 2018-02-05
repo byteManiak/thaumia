@@ -12,31 +12,13 @@ const GLchar *defaultVertexSource[] =
 	"#version 330 core\n"
 	"layout (location = 0) in vec2 coord;\n"
 	 "out vec2 uv;\n"
-	"uniform float time;\n"
 	"uniform ivec2 resolution;\n"
 	 "void main() {"
-	 "   const vec2 uv_verts[4] = vec2[4]( vec2(0, 1),"
+	 "   const vec2 uv_verts[3] = vec2[3]( vec2(0, 1),"
 	 "                                vec2(1, 1),"
-	 "                                vec2(1, 0),"
-	 "                                vec2(0, 0));"
+	 "                                vec2(1, 0));"
 	 "   gl_Position = vec4(vec2(coord.x, -coord.y) / resolution * 2, 1, 1);"
-	 "	 uv = uv_verts[gl_VertexID]; }"
-};
-
-const GLchar *watermelonVertexSource[] =
-{
-	"#version 330 core\n"
-	"layout (location = 0) in vec2 coord;\n"
-	 "out vec2 uv;\n"
-	"uniform float time;\n"
-	"uniform ivec2 resolution;\n"
-	 "void main() {"
-	 "   const vec2 uv_verts[4] = vec2[4]( vec2(0, 1),"
-	 "                                vec2(1, 1),"
-	 "                                vec2(1, 0),"
-	 "                                vec2(0, 0));"
-	 "   gl_Position = vec4(vec2(coord.x, -coord.y) / resolution * 2 + vec2(0, sin(time)/6), 1, 1);"
-	 "	 uv = uv_verts[gl_VertexID]; }"
+	 "	 uv = uv_verts[gl_VertexID%3]; }"
 };
 
 const GLchar *defaultFragmentSource[] =
@@ -44,8 +26,7 @@ const GLchar *defaultFragmentSource[] =
 	"#version 330 core\n"
 	"in vec2 uv;\n"
 	"uniform sampler2D tex;\n"
-	"uniform float time;\n"
-	"void main() { gl_FragColor = vec4(1, 1, 1, texture(tex, uv).r); }\n"
+	"void main() { gl_FragColor = texture(tex, uv); }\n"
 };
 
 GLuint getShader(const GLchar **vertex_source, const GLchar **fragment_source)
@@ -80,7 +61,9 @@ GLuint getShader(const GLchar **vertex_source, const GLchar **fragment_source)
 	return shader_program;
 }
 
+GLuint testShader;
 GLuint defaultShader;
 GLuint watermelonShader;
+GLuint fontShader;
 
 #endif // SHADER_H

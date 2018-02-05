@@ -14,17 +14,22 @@ char missingTexture[16] = {255, 0, 255,	255,
 						   0, 0, 0, 255,
 						   255, 0, 255, 255};
 
-struct drawable
+struct texture
 {
-	GLuint _vao;
-	GLuint _vbo;
+	GLfloat x, y, w, h;
 	GLuint _texture;
-
 };
 
-struct drawable *newTexture(const char *path, float x, float y, float w, float h)
+struct texture *newTexture(const char	*path,
+							float		x,
+							float		y,
+							float		w,
+							float		h)
 {
-	struct drawable *obj = malloc(sizeof(struct drawable));
+	struct texture *obj = malloc(sizeof(struct texture));
+
+	obj->x = x; obj->y = y; obj->w = w; obj->h = h;
+
 	glGenTextures(1, &obj->_texture);
 	glBindTexture(GL_TEXTURE_2D, obj->_texture);
 
@@ -35,7 +40,7 @@ struct drawable *newTexture(const char *path, float x, float y, float w, float h
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
 					 FreeImage_GetWidth(bitmap),
 					 FreeImage_GetHeight(bitmap),
-					 0, GL_BGRA, GL_UNSIGNED_BYTE, FreeImage_GetBits(bitmap));
+					 0, GL_RGBA, GL_UNSIGNED_BYTE, FreeImage_GetBits(bitmap));
 	}
 	else
 	{
@@ -45,24 +50,20 @@ struct drawable *newTexture(const char *path, float x, float y, float w, float h
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	// set texture filtering. texture won't render without these parameters
-
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 	FreeImage_Unload(bitmap);
 
-	glGenVertexArrays(1, &obj->_vao);
-	glBindVertexArray(obj->_vao);
-
-	float pos[8] = {x, y, x+w, y, x+w, y+h, x, y+h};
-
-	glGenBuffers(1, &obj->_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, obj->_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pos), pos, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, 0);
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 	return obj;
 }
+
+void deleteTexture(struct texture **texture)
+{
+	glDeleteTextures(1, &(*texture)->_texture);
+	free(*texture);
+}
+
 #endif // TEXTURE_H

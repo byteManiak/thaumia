@@ -7,9 +7,9 @@
 
 static unsigned char isFullscreen = 0;
 
-void toggleFullscreen(GLFWwindow **window,
-					  const GLFWvidmode **vidmodes,
-					  int count)
+void toggleFullscreen(GLFWwindow		**window,
+					  const GLFWvidmode	**vidmodes,
+					  int				count)
 {
 	glfwSetWindowMonitor(*window,
 						 isFullscreen ? glfwGetPrimaryMonitor() : NULL,
@@ -24,11 +24,11 @@ void toggleFullscreen(GLFWwindow **window,
 	// toggle fullscreen mode. currently only sets fullscreen resolution to the max available on the monitor
 }
 
-void changeVideoMode(GLFWwindow **window,
-					 const GLFWvidmode **vidmodes,
-					 int count,
-					 int newVidMode,
-					 int fullscreen)
+void changeVideoMode(GLFWwindow			**window,
+					 const GLFWvidmode	**vidmodes,
+					 int				count,
+					 int				newVidMode,
+					 int				fullscreen)
 {
 	if(newVidMode > count || newVidMode < 1)
 	{
