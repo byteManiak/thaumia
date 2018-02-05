@@ -14,24 +14,11 @@ char missingTexture[16] = {255, 0, 255,	255,
 						   0, 0, 0, 255,
 						   255, 0, 255, 255};
 
-struct texture
+GLuint newTexture(const char *path)
 {
-	GLfloat x, y, w, h;
-	GLuint _texture;
-};
-
-struct texture *newTexture(const char	*path,
-							float		x,
-							float		y,
-							float		w,
-							float		h)
-{
-	struct texture *obj = malloc(sizeof(struct texture));
-
-	obj->x = x; obj->y = y; obj->w = w; obj->h = h;
-
-	glGenTextures(1, &obj->_texture);
-	glBindTexture(GL_TEXTURE_2D, obj->_texture);
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path, 0);
 	FIBITMAP *bitmap = FreeImage_Load(format, path, 0);
@@ -56,14 +43,7 @@ struct texture *newTexture(const char	*path,
 
 	FreeImage_Unload(bitmap);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
-	return obj;
-}
-
-void deleteTexture(struct texture **texture)
-{
-	glDeleteTextures(1, &(*texture)->_texture);
-	free(*texture);
+	return texture;
 }
 
 #endif // TEXTURE_H

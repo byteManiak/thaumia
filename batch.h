@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <GL/glew.h>
-#include "texture.h"
+#include "rectangle.h"
 
 // this file contains the OpenGL batch, which stores
 // multiple objects of the same type and draws them in one call
@@ -28,29 +28,29 @@ struct GLbatch *newBatch(GLuint shader)
 	return object;
 }
 
-void addToBatch(struct GLbatch *batch, struct texture *tex)
+void addToBatch(struct GLbatch *batch, struct rectangle rec)
 {
 	if(!batch->size)
 	{
 		batch->data = realloc(batch->data, sizeof(GLfloat) * 12);
 
-		batch->data[0] = tex->x;
-		batch->data[1] = tex->y;
+		batch->data[0] = rec.x;
+		batch->data[1] = rec.y;
 
-		batch->data[2] = tex->x;
-		batch->data[3] = tex->y + tex->h;
+		batch->data[2] = rec.x;
+		batch->data[3] = rec.y + rec.h;
 
-		batch->data[4] = tex->x + tex->w;
-		batch->data[5] = tex->y + tex->h;
+		batch->data[4] = rec.x + rec.w;
+		batch->data[5] = rec.y + rec.h;
 
-		batch->data[6] = tex->x;
-		batch->data[7] = tex->y;
+		batch->data[6] = rec.x;
+		batch->data[7] = rec.y;
 
-		batch->data[8] = tex->x + tex->w;
-		batch->data[9] = tex->y;
+		batch->data[8] = rec.x + rec.w;
+		batch->data[9] = rec.y;
 
-		batch->data[10] = tex->x + tex->w;
-		batch->data[11] = tex->y + tex->h;
+		batch->data[10] = rec.x + rec.w;
+		batch->data[11] = rec.y + rec.h;
 
 		// every batch object is drawn in this order:
 		// top-left, bottom-left, bottom-right, top-left, top-right, bottom-right
@@ -61,23 +61,23 @@ void addToBatch(struct GLbatch *batch, struct texture *tex)
 	{
 		batch->data = realloc(batch->data, (batch->size + 12) * sizeof(GLfloat));
 
-		batch->data[batch->size] = tex->x;
-		batch->data[batch->size+1] = tex->y;
+		batch->data[batch->size] = rec.x;
+		batch->data[batch->size+1] = rec.y;
 
-		batch->data[batch->size+2] = tex->x;
-		batch->data[batch->size+3] = tex->y + tex->h;
+		batch->data[batch->size+2] = rec.x;
+		batch->data[batch->size+3] = rec.y + rec.h;
 
-		batch->data[batch->size+4] = tex->x + tex->w;
-		batch->data[batch->size+5] = tex->y + tex->h;
+		batch->data[batch->size+4] = rec.x + rec.w;
+		batch->data[batch->size+5] = rec.y + rec.h;
 
-		batch->data[batch->size+6] = tex->x;
-		batch->data[batch->size+7] = tex->y;
+		batch->data[batch->size+6] = rec.x;
+		batch->data[batch->size+7] = rec.y;
 
-		batch->data[batch->size+8] = tex->x + tex->w;
-		batch->data[batch->size+9] = tex->y;
+		batch->data[batch->size+8] = rec.x + rec.w;
+		batch->data[batch->size+9] = rec.y;
 
-		batch->data[batch->size+10] = tex->x + tex->w;
-		batch->data[batch->size+11] = tex->y + tex->h;
+		batch->data[batch->size+10] = rec.x + rec.w;
+		batch->data[batch->size+11] = rec.y + rec.h;
 
 		batch->size += 12;
 	}

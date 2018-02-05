@@ -9,9 +9,9 @@
 #include "renderer.h"
 #include "input.h"
 #include "fps.h"
-#include "text.h"
 #include "context_functions.h"
 #include "batch.h"
+#include "texture.h"
 
 static unsigned int currentVidMode = 0;
 
@@ -34,15 +34,17 @@ int main()
 	defaultShader = getShader(defaultVertexSource, defaultFragmentSource);
 	// initialise shaders. to do: initialise shaders somewhere else and only if needed
 
-	struct texture **tex = malloc(sizeof(struct texture*) * 16384);
+	struct rectangle *tex = malloc(sizeof(struct rectangle) * 16384);
 	struct GLbatch *batch = newBatch(defaultShader);
 
 	for(int i = 0; i < 128; i++)
 		for(int j = 0; j < 128; j++)
 	{
-		tex[i*4+j] = newTexture("staff.tga", i*8-683, j*8-384, 32, 32);
+		tex[i*4+j] = newRectangle(i*64-683, j*64-384, 64, 64);
 		addToBatch(batch, tex[i*4+j]);
 	}
+
+	GLuint texture = newTexture("staff.tga");
 
 	GLint resolution[2] = {0, 0}, oldResolution[2] = {0, 0};
 
@@ -66,7 +68,7 @@ int main()
 
 		glUseProgram(defaultShader);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex[0]->_texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glUniform2iv(glGetUniformLocation(defaultShader, "resolution"), 1, resolution);
 		glUniform1i(glGetUniformLocation(defaultShader, "tex"), 0);
 		glUniform1f(glGetUniformLocation(defaultShader, "time"), time);

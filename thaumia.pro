@@ -19,4 +19,5 @@ HEADERS += \
     cvar.h \
     fps.h \
     context_functions.h \
-    batch.h
+    batch.h \
+    rectangle.h

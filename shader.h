@@ -12,13 +12,19 @@ const GLchar *defaultVertexSource[] =
 	"#version 330 core\n"
 	"layout (location = 0) in vec2 coord;\n"
 	 "out vec2 uv;\n"
+	"uniform float time;\n"
 	"uniform ivec2 resolution;\n"
+
+	"mat2 rot = mat2( cos(time), sin(time), -sin(time), cos(time) );"
 	 "void main() {"
-	 "   const vec2 uv_verts[3] = vec2[3]( vec2(0, 1),"
-	 "                                vec2(1, 1),"
-	 "                                vec2(1, 0));"
-	 "   gl_Position = vec4(vec2(coord.x, -coord.y) / resolution * 2, 1, 1);"
-	 "	 uv = uv_verts[gl_VertexID%3]; }"
+	 "   const vec2 uv_verts[6] = vec2[6]( vec2(0, 1),"
+	 "                                vec2(0, 0),"
+	 "                                vec2(1, 0),"
+	 "								  vec2(0, 1),"
+	"								  vec2(1, 1),"
+	"								  vec2(1, 0));"
+	 "   gl_Position = vec4(vec2(coord.x - 800, -coord.y + 500) * 0.5 / resolution * 2, 1, 1);"
+	 "	 uv = uv_verts[gl_VertexID%6]; }"
 };
 
 const GLchar *defaultFragmentSource[] =
