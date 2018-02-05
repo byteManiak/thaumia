@@ -5,6 +5,9 @@
 #include <GL/gl.h>
 #include "texture.h"
 
+// this file implements the drawcall functions
+// needs heavy WIP
+
 void draw(struct drawable *object, GLuint shader)
 {
 	glBindVertexArray(object->_vao);

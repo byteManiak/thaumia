@@ -6,6 +6,8 @@
 #include <string.h>
 #include <ctype.h>
 
+// this file implements a config system which reads/stores variables in ./cvars.cfg
+
 struct cvar
 {
 	const char *name;

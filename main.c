@@ -14,26 +14,26 @@
 #include "context_functions.h"
 
 static unsigned int currentVidMode = 0;
+
 int main()
 {
 	GLFWwindow *window;
 	const GLFWvidmode *vidmodes; int count;
 	FT_Library fontLibrary; FT_Face fontFace;
 	if(init(&window, &vidmodes, &count, &fontLibrary, &fontFace)) return 1;	// init returns 0 on success
+	// potential to do: pack all these data types in a struct and abstract them
 
 	printf("[getVidModes] Available modes: %d\n", count);
 	for(int i = 0; i < count; i++)
 	{
 		printf("[getVidModes] Mode %d: %d x %d @ %dHz\n", i, vidmodes[i].width, vidmodes[i].height,
 			   vidmodes[i].refreshRate);
-	}
-
-	glClearColor(0.1, 0, 0.2, 1);
+	} // to do: implement this function in a different file
 
 	defaultShader = getShader(defaultVertexSource, defaultFragmentSource);
 	watermelonShader = getShader(watermelonVertexSource, defaultFragmentSource);
+	// initialise shaders. to do: initialise shaders somewhere else and only if needed
 
-	//struct drawable *texture = newTexture("logo.tga", -256, -64, 512, 128);
 	struct drawable *texture2 = newTexture("potion.tga", -256, -64, 128, 128);
 
 	struct text *t = newText("Malarkey piness!!", &fontFace, -320, 32);
@@ -45,7 +45,7 @@ int main()
 	do
 	{
 		time = glfwGetTime();
-		getFrameTime();
+		getFrameTime();		// to do: see fps.h
 
 		glfwGetWindowSize(window, &resolution[0], &resolution[1]);
 
@@ -87,6 +87,7 @@ int main()
 			currentVidMode = (currentVidMode+1) % (count+1);
 			changeVideoMode(&window, &vidmodes, count, currentVidMode+1, 1);
 		}
+
 		if(isPressed(&window, GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(window, 1);
 
 	} while(!glfwWindowShouldClose(window));

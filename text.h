@@ -45,14 +45,23 @@ struct drawable *glyphFromChar(unsigned char t, FT_Face *face, float x, float y)
 
 	FT_Load_Glyph(*face, t+1, FT_LOAD_RENDER);
 
+	GLint prevAlignment;
+
+	glGetIntegerv(GL_UNPACK_ALIGNMENT, &prevAlignment);		// get previous pixel packing mode
+
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
+	// set pixel packing to 1 byte padding - this line is absolutely needed for FreeType fonts in GL
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,		// we only read one byte that will be used as alpha in a shader
 				 (*face)->glyph->bitmap.width,
 				 (*face)->glyph->bitmap.rows,
 				 0, GL_RED, GL_UNSIGNED_BYTE, (*face)->glyph->bitmap.buffer);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	// set texture filtering. texture won't render without these parameters
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, prevAlignment);		// set pixel packing back to normal
 
 	glGenVertexArrays(1, &obj->_vao);
 	glBindVertexArray(obj->_vao);

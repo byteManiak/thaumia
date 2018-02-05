@@ -4,6 +4,9 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+// this file implements some shaders
+// to do: separate shaders in their own .h/.glsl files in a "shaders" folder
+
 const GLchar *defaultVertexSource[] =
 {
 	"#version 330 core\n"

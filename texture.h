@@ -6,6 +6,9 @@
 #include <GL/gl.h>
 #include <FreeImage.h>
 
+// this file implements texture creation
+// needs heavy WIP
+
 char missingTexture[16] = {255, 0, 255,	255,
 						   0, 0, 0, 255,
 						   0, 0, 0, 255,
@@ -40,8 +43,9 @@ struct drawable *newTexture(const char *path, float x, float y, float w, float h
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2,
 					 0, GL_RGBA, GL_UNSIGNED_BYTE, missingTexture);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // GL_NEAREST is pixel-perfect, GL_LINEAR isn't
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// set texture filtering. texture won't render without these parameters
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
