@@ -3,6 +3,7 @@
 *.wav
 *.ttf
 *.pro.user
+*.o
 release
 thaumia
 Makefile
