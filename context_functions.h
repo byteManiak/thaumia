@@ -6,6 +6,7 @@
 // this file implements context-specific functions such as setting resolution, taking screenshots
 
 static unsigned char isFullscreen = 0;
+unsigned char currentVidMode = 0;
 
 void toggleFullscreen(GLFWwindow		**window,
 					  const GLFWvidmode	**vidmodes,
@@ -14,12 +15,12 @@ void toggleFullscreen(GLFWwindow		**window,
 	glfwSetWindowMonitor(*window,
 						 isFullscreen ? glfwGetPrimaryMonitor() : NULL,
 						 0, 0,
-						 (*vidmodes)[count-1].width,
-						(*vidmodes)[count-1].height,
-						(*vidmodes)[count-1].refreshRate);
+						 (*vidmodes)[currentVidMode-1].width,
+						(*vidmodes)[currentVidMode-1].height,
+						(*vidmodes)[currentVidMode-1].refreshRate);
 	isFullscreen = 1 - isFullscreen;
 	printf("[toggleFullscreen] Fullscreen resolution is %d x %d.\n",
-		   (*vidmodes)[count-1].width, (*vidmodes)[count-1].height);
+		   (*vidmodes)[count-1].width, (*vidmodes)[currentVidMode-1].height);
 
 	// toggle fullscreen mode. currently only sets fullscreen resolution to the max available on the monitor
 }
@@ -36,6 +37,7 @@ void changeVideoMode(GLFWwindow			**window,
 		return;
 	}
 
+	currentVidMode = newVidMode;
 	glfwSetWindowMonitor(*window,
 				   fullscreen ? glfwGetPrimaryMonitor() : NULL,
 				   0, 0,

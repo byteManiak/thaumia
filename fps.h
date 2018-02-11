@@ -8,6 +8,8 @@
 
 static int fps = 0;
 static double currentTime = 1;
+static double timeInLastFrame = 0;
+double deltaTime = 0;
 
 void getFrameTime()
 {
@@ -21,6 +23,12 @@ void getFrameTime()
 
 	// the function averages frametime by looking at the number of fps
 	// [optional] to do: don't average, just show raw frametimes
+}
+
+void updateDeltaTime()
+{
+	deltaTime = glfwGetTime() - timeInLastFrame;
+	timeInLastFrame = glfwGetTime();
 }
 
 #endif // FPS_H

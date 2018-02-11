@@ -11,11 +11,12 @@ const GLchar *defaultVertexSource[] =
 {
 	"#version 330 core\n"
 	"layout (location = 0) in vec2 coord;\n"
-	 "out vec2 uv;\n"
+	"layout (location = 1) in float texID;\n"
+	"out float textureID;\n"
+	"out vec2 uv;\n"
 	"uniform float time;\n"
 	"uniform ivec2 resolution;\n"
-
-	"mat2 rot = mat2( cos(time), sin(time), -sin(time), cos(time) );"
+	"uniform vec2 offset;\n"
 	 "void main() {"
 	 "   const vec2 uv_verts[6] = vec2[6]( vec2(0, 1),"
 	 "                                vec2(0, 0),"
@@ -23,15 +24,17 @@ const GLchar *defaultVertexSource[] =
 	 "								  vec2(0, 1),"
 	"								  vec2(1, 1),"
 	"								  vec2(1, 0));"
-	 "   gl_Position = vec4(vec2(coord.x - 800, -coord.y + 500) * 0.5 / resolution * 2, 1, 1);"
+	 "   gl_Position = vec4((vec2(coord.x, -coord.y) + vec2(offset.x, -offset.y))/ resolution * 2, 1, 1);"
 	 "	 uv = uv_verts[gl_VertexID%6]; }"
 };
 
 const GLchar *defaultFragmentSource[] =
 {
 	"#version 330 core\n"
+	"in float textureID;\n"
 	"in vec2 uv;\n"
 	"uniform sampler2D tex;\n"
+	"uniform float time;\n"
 	"void main() { gl_FragColor = texture(tex, uv); }\n"
 };
 

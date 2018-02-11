@@ -27,7 +27,7 @@ GLuint newTexture(const char *path)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
 					 FreeImage_GetWidth(bitmap),
 					 FreeImage_GetHeight(bitmap),
-					 0, GL_RGBA, GL_UNSIGNED_BYTE, FreeImage_GetBits(bitmap));
+					 0, GL_BGRA, GL_UNSIGNED_BYTE, FreeImage_GetBits(bitmap));
 	}
 	else
 	{
